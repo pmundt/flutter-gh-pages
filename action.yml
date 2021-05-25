@@ -15,6 +15,10 @@ inputs:
     description: 'The directory where the project is (default .)'
     required: false
     default: .
+  deployTo:
+    description: 'The branch to deploy to (default gh-pages)'
+    required: false
+    default: gh-pages
 
 runs:
   using: 'composite'
@@ -40,6 +44,6 @@ runs:
     - run: git commit -m "Automatic deployment by github-actions"
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - run: git push origin HEAD:gh-pages --force
+    - run: git push origin HEAD:${{inputs.deployTo}} --force
       shell: bash
       working-directory: ${{inputs.workingDir}}
