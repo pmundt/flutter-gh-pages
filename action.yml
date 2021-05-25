@@ -19,6 +19,9 @@ inputs:
     description: 'The branch to deploy to (default gh-pages)'
     required: false
     default: gh-pages
+  additionalBuildFlags:
+    description: 'Additional flags to pass to flutter build'
+    required: false
 
 runs:
   using: 'composite'
@@ -29,7 +32,7 @@ runs:
     - run: flutter pub get
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - run: flutter build web --release --web-renderer=${{inputs.webRenderer}}
+    - run: flutter build web --release --web-renderer=${{inputs.webRenderer}} ${{inputs.additionalBuildFlags}}
       shell: bash
       working-directory: ${{inputs.workingDir}}
     - run: git config user.name github-actions
