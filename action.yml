@@ -22,6 +22,15 @@ inputs:
   additionalBuildFlags:
     description: 'Additional flags to pass to flutter build'
     required: false
+  additionalDart2JsFlags:
+    description: 'Additional flags to pass to dart2js'
+    required: false
+  webWorkerSource:
+    description: 'Web worker source .dart file'
+    required: false
+  webWorkerDestination:
+    description: 'Web worker destination .js file'
+    required: false
 
 runs:
   using: 'composite'
@@ -35,6 +44,14 @@ runs:
     - run: flutter build web --release --web-renderer=${{inputs.webRenderer}} ${{inputs.additionalBuildFlags}}
       shell: bash
       working-directory: ${{inputs.workingDir}}
+    - run: mkdir -p `dirname build/web/${{inputs.webWorkerDestination}}`
+      shell: bash
+      working-directory: ${{inputs.workingDir}}
+      if: ${{inputs.webWorkerDestination}}
+    - run: dart2js ${{inputs.additionalDart2JsFlags}} ${{inputs.webWorkerSource}} -o build/web/${{inputs.webWorkerDestination}}
+      shell: bash
+      working-directory: ${{inputs.workingDir}}
+      if: ${{inputs.webWorkerSource}}
     - run: git config user.name github-actions
       shell: bash
       working-directory: ${{inputs.workingDir}}
